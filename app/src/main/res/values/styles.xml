@@ -31,4 +31,21 @@
     <style name="CustomButtonStyleLandscape" parent="CustomButtonStyle">
         <item name="android:layout_margin">4dp</item>
     </style>
+
+
+    <!-- Custom application theme: Indigo-Cyan -->
+    <style name="AppThemeIc" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary_ic</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_ic</item>
+        <item name="colorAccent">@color/colorAccent_ic</item>
+        <item name="colorSecondary">@color/colorSecondary_ic</item>
+
+    </style>
+    <style name="AppThemeIc.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppThemeIc.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppThemeIc.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
 </resources>

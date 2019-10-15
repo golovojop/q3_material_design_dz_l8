@@ -5,4 +5,12 @@
     <color name="colorAccent">#9E9E9E</color>
 
     <color name="button_background">#673AB7</color>
+
+
+    <!-- Custom -->
+    <color name="colorPrimary_ic">#9C27B0</color>
+    <color name="colorPrimaryDark_ic">#7B1FA2</color>
+    <color name="colorAccent_ic">#9E9E9E</color>
+    <color name="colorSecondary_ic">#795548</color>
+    <color name="colorOnSecondary_ic">#FFFFFF</color>
 </resources>
