@@ -1,7 +1,4 @@
 <resources>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="app_name">StylesApp</string>
     <string name="action_settings">Settings</string>
     <string name="button_1">home</string>
@@ -9,5 +6,8 @@
     <string name="button_3">create</string>
     <string name="button_4">upload</string>
     <string name="button_5">share</string>
+    <string name="button_fly">fly</string>
+    <string name="button_sleep">sleep</string>
+    <string name="button_eat">eat</string>
     <string name="title_activity_theme">ThemeActivity</string>
 </resources>

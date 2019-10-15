@@ -32,6 +32,16 @@
         <item name="android:layout_margin">4dp</item>
     </style>
 
+    <style name="CustomButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="strokeColor">@android:color/white</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <style name="CustomButtonText" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
 
     <!-- Custom application theme: Indigo-Cyan -->
     <style name="AppThemeIc" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -39,12 +49,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark_ic</item>
         <item name="colorAccent">@color/colorAccent_ic</item>
         <item name="colorSecondary">@color/colorSecondary_ic</item>
-
     </style>
+
     <style name="AppThemeIc.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppThemeIc.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppThemeIc.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 

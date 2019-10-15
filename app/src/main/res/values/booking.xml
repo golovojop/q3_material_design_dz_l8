@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="flight_booking">
+        <item>1 Adult, Economy</item>
+        <item>Seoul, Korea</item>
+        <item>Choose Destination</item>
+        <item>Select Dates</item>
+    </string-array>
+</resources>
