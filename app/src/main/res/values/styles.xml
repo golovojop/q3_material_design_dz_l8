@@ -15,6 +15,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
+    <!-- Buttons styles -->
     <style name="CustomButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -43,12 +44,16 @@
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
 
-    <!-- Custom application theme: Indigo-Cyan -->
+    <!-- Custom activity theme -->
     <style name="AppThemeIc" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary_ic</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_ic</item>
         <item name="colorAccent">@color/colorAccent_ic</item>
         <item name="colorSecondary">@color/colorSecondary_ic</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark_ic</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="AppThemeIc.NoActionBar">

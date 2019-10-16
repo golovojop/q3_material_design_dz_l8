@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
               android:background="?attr/colorPrimary"
               android:layout_marginTop="?attr/actionBarSize"
               android:fitsSystemWindows="true"
@@ -45,6 +44,7 @@
             android:id="@+id/lv_options"
             android:layout_margin="12dp"
             android:dividerHeight="6dp"
+            android:divider="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="0dp">
     </ListView>
