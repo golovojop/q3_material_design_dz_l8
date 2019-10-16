@@ -1,5 +1,11 @@
 /**
  * https://stackoverflow.com/questions/52771533/pause-progress-of-objectanimator/52783302
+ *
+ * https://medium.com/androiddevelopers/playing-with-paths-3fbc679a6f77
+ * https://gist.github.com/nickbutcher/b41da75b8b1fc115171af86c63796c5b#file-polygonlapsdrawable-kt
+ *
+ * http://www.curious-creature.com/2013/12/21/android-recipe-4-path-tracing/?source=post_page-----3fbc679a6f77----------------------
+ *https://github.com/romainguy/road-trip/blob/master/application/src/main/java/org/curiouscreature/android/roadtrip/IntroView.java
  */
 
 package k.s.yarlykov.stylesapp
