@@ -51,6 +51,10 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
         addCircle(0f, 0f, 8f, Path.Direction.CW)
     }
 
+    val pathConvexArrow = makeConvexArrow(32f, 12f)
+
+    val pathFlight = getFlightPath()
+
     private val lengthCycle by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
         pathMeasure.length
@@ -70,10 +74,8 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
         val advance = lengthCycle
         val phase = initialPhase + dotProgress * lengthCycle
 
-        dotPaint.pathEffect = PathDashPathEffect(pathDot, advance, phase, PathDashPathEffect.Style.TRANSLATE)
+        dotPaint.pathEffect = PathDashPathEffect(pathFlight, advance, phase, PathDashPathEffect.Style.ROTATE)
         canvas.drawPath(pathCycle, dotPaint)
-
-//        canvas.drawPath(makeConvexArrow(32f, 12f), linePaint)
     }
 
     /**
