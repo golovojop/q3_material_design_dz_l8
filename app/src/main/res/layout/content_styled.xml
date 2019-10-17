@@ -75,8 +75,8 @@
 
         <ImageView
                 android:id="@+id/custom_drawable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="192dp"
+                android:layout_height="192dp"
                 android:src="@drawable/rotated_flight"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -13,22 +13,21 @@ package k.s.yarlykov.stylesapp
 import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.util.Property
 import androidx.core.content.ContextCompat
 
-class CustomDrawable(val radius : Float) : Drawable() {
+class CustomDrawable(private val radius : Float = 64f) : Drawable() {
 
     var progress = 1f
         set(value) {
             field = value.coerceIn(0f, 1f)
-            callback.invalidateDrawable(this)
+            callback?.invalidateDrawable(this)
         }
 
     private val cornerEffect = CornerPathEffect(8f)
 
-    private val initialPhase = 4f
-
-    private val length = 2 * Math.PI.toFloat() * radius
+    private val initialPhase = 0f
 
     private val linePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -37,16 +36,29 @@ class CustomDrawable(val radius : Float) : Drawable() {
         pathEffect = cornerEffect
     }
 
-    val path = Path().apply {
-        addCircle(450f, 150f, 125f, Path.Direction.CW)
+    private val path = Path().apply {
+        addCircle(cx, cy, radius, Path.Direction.CW)
+    }
+
+    private val length by lazy(LazyThreadSafetyMode.NONE) {
+        pathMeasure.setPath(path, false)
+        pathMeasure.length
     }
 
     override fun draw(canvas: Canvas) {
         if (progress < 1f) {
+
+//            Log.e("APP_TAG", "progress=$progress")
+
+//            val progressEffect = DashPathEffect(
+//                floatArrayOf(0f, (1f - progress) * length, progress * length, 0f),
+//                initialPhase)
+
             val progressEffect = DashPathEffect(
-                floatArrayOf(0f, (1f - progress) * length, progress * length, 0f),
+                floatArrayOf(4f, (1f - progress) * 14f, 4f, (1f - progress) * 14f),
                 initialPhase)
             linePaint.pathEffect = ComposePathEffect(progressEffect, cornerEffect)
+
         }
         canvas.drawPath(path, linePaint)    }
 
@@ -71,7 +83,11 @@ class CustomDrawable(val radius : Float) : Drawable() {
         private const val cy = (height / 2).toFloat()
         private val pathMeasure = PathMeasure()
 
-
-        val PROGRESS = Property.of(CustomDrawable::class.java, Float::class.java, "progress")
+        object PROGRESS : Property<CustomDrawable, Float>(Float::class.java, "progress") {
+            override fun set(cd: CustomDrawable, value: Float) {
+                cd.progress = value
+            }
+            override fun get(cd : CustomDrawable): Float = cd.progress
+        }
     }
 }

@@ -13,16 +13,12 @@ import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
 import android.graphics.Color
 import android.graphics.Path
-import android.graphics.PathMeasure
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.util.FloatProperty
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.PathInterpolator
+import android.view.animation.LinearInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.SimpleAdapter
 import android.widget.TextView
@@ -41,77 +37,49 @@ class ThemeActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        custom_drawable.setImageDrawable(CustomDrawable(50f))
+        custom_drawable.setImageDrawable(CustomDrawable(96f))
 
         initListView()
     }
 
     override fun onResume() {
         super.onResume()
-        animateFlightByCycle()
+        animateCustomDrawable()
+//        animateFlightByCycle()
     }
 
     private fun animateFlightByCycle() {
-        val path = Path()
-
-        path.addCircle(450f, 150f, 125f, Path.Direction.CW)
-        val animator = ObjectAnimator.ofFloat(iv_flight, View.X, View.Y, path).apply {
-            duration = 12000
-            repeatCount = INFINITE
-            repeatMode = RESTART
-            start()
-        }
-    }
-
-
-
-
-    private fun animateFlightByCurve() {
-
-
-//        val coords = IntArray(2)
-//        iv_flight.getLocationOnScreen(coords)
-//        Log.e("APP_TAG", "On screen x:y = ${coords[0]}:${coords[1]}")
-//        iv_flight.getLocationInWindow(coords)
-//        Log.e("APP_TAG", "On window x:y = ${coords[0]}:${coords[1]}")
-
-        val x = clCanvas.x + clCanvas.layoutParams.width/2
-        val y = clCanvas.y + clCanvas.layoutParams.height/2
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val path = Path()
 
-            val path = createPath(x, y, 100, 100f)
-
-//            val path = Path().apply {
-////                arcTo(0f, 0f, 1000f, 1000f, 270f, -180f, true)
-//                arcTo(0f, 0f, 100f, 100f, 270f, -180f, true)
-//            }
-            val animator = ObjectAnimator.ofFloat(iv_flight, View.X, View.Y, path).apply {
+            path.addCircle(450f, 150f, 125f, Path.Direction.CW)
+            ObjectAnimator.ofFloat(iv_flight, View.X, View.Y, path).apply {
                 duration = 12000
+                repeatCount = INFINITE
+                repeatMode = RESTART
                 start()
             }
+
         } else {
             animateFlightHorizontal()
         }
+
     }
 
-    private fun createPath(centerX: Float, centerY: Float, sides: Int, radius: Float): Path {
-        val path = Path()
-        val angle = 2.0 * Math.PI / sides
 
-        path.moveTo(
-            centerX + (radius * Math.cos(0.0)).toFloat(),
-            centerY + (radius * Math.sin(0.0)).toFloat()
-        )
-        for (i in 1 until sides) {
-            path.lineTo(
-                centerX + (radius * Math.cos(angle * i)).toFloat(),
-                centerY + (radius * Math.sin(angle * i)).toFloat()
-            )
-        }
-        path.close()
-        return path
+    private fun animateCustomDrawable() {
+        val customDrawable : CustomDrawable = custom_drawable.drawable as CustomDrawable
+
+        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.PROGRESS, 0f, 1f).apply {
+            duration = 8000L
+            interpolator = LinearInterpolator()
+            repeatCount = INFINITE
+            repeatMode = RESTART
+        }.start()
+
     }
+
 
     private fun animateFlightHorizontal() {
         iv_flight.startAnimation(
