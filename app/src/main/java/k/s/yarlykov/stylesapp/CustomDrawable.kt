@@ -29,12 +29,12 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
             callback?.invalidateDrawable(this)
         }
 
-    private val cornerEffect = CornerPathEffect(8f)
+    private val cornerEffect = CornerPathEffect(24f)
 
     private val linePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = 0xFF888888.toInt()
-        strokeWidth = 4f
+        color = 0xCC888888.toInt()
+        strokeWidth = 6f
         pathEffect = cornerEffect
     }
 
@@ -57,7 +57,10 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
 
     val pathConvexArrow = makeConvexArrow(32f, 12f)
 
-    val pathFlight = getFlightPath()
+    val pathUfo = getUfoShapePath()
+
+    val pathTakeOff = makeTakeOffPath(width.toFloat(), height.toFloat())
+    val pathTakeOffShifted: Path = makeTakeOffPathShifted(width.toFloat(), height.toFloat(), 20f)
 
     private val lengthCycle by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
@@ -69,22 +72,35 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
         pathMeasure.length
     }
 
+    private val lengthTakeOff by lazy(LazyThreadSafetyMode.NONE) {
+        pathMeasure.setPath(pathTakeOff, false)
+        pathMeasure.length
+    }
+
+
     private val initialPhase = lengthCycle * 0.05f
 
     private val pathArrow = makeConvexArrow(32f, 12f)
 
     override fun draw(canvas: Canvas) {
-//        if (progress < 1f) {
-//            val progressEffect = dashEffectCircleDrawing()
-//            linePaint.pathEffect = ComposePathEffect(progressEffect, cornerEffect)
-//        }
-        canvas.drawPath(pathCycle, linePaint)
+        if (progress < 1f) {
+            val progressEffect = dashEffectCircleDrawing()
+            linePaint.pathEffect = ComposePathEffect(progressEffect, cornerEffect)
+        }
+//        canvas.drawPath(pathCycle, linePaint)
 
-        val advance = lengthTrack
-        val phase = initialPhase - dotProgress * lengthTrack
+        canvas.drawPath(pathTakeOff, linePaint)
+        canvas.drawPath(pathTakeOffShifted, linePaint)
 
-        dotPaint.pathEffect = PathDashPathEffect(pathFlight, advance, phase, PathDashPathEffect.Style.ROTATE)
-        canvas.drawPath(pathTrack, dotPaint)
+        val advance = lengthTakeOff
+        val phase = initialPhase - dotProgress * lengthTakeOff
+
+        dotPaint.pathEffect =
+            ComposePathEffect(
+                PathDashPathEffect(pathUfo, advance, phase, PathDashPathEffect.Style.ROTATE),
+                cornerEffect
+            )
+        canvas.drawPath(pathTakeOff, dotPaint)
     }
 
     /**
@@ -131,8 +147,8 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
     override fun getIntrinsicHeight() = height
 
     companion object {
-        private const val width = 256
-        private const val height = 256
+        private const val width = 600
+        private const val height = 400
         private const val cx = (width / 2).toFloat()
         private const val cy = (height / 2).toFloat()
         private val pathMeasure = PathMeasure()
