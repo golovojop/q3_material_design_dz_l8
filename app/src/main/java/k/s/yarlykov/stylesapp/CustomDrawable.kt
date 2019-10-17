@@ -26,7 +26,7 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
     var dotProgress = 0f
         set(value) {
             field = value.coerceIn(0f, 1f)
-            callback.invalidateDrawable(this)
+            callback?.invalidateDrawable(this)
         }
 
     private val cornerEffect = CornerPathEffect(8f)
@@ -47,6 +47,10 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
         addCircle(cx, cy, radius, Path.Direction.CW)
     }
 
+    val pathTrack = Path().apply {
+        addCircle(cx, cy, radius + 8, Path.Direction.CW)
+    }
+
     val pathDot = Path().apply {
         addCircle(0f, 0f, 8f, Path.Direction.CW)
     }
@@ -57,6 +61,11 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
 
     private val lengthCycle by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
+        pathMeasure.length
+    }
+
+    private val lengthTrack by lazy(LazyThreadSafetyMode.NONE) {
+        pathMeasure.setPath(pathTrack, false)
         pathMeasure.length
     }
 
@@ -71,11 +80,11 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
 //        }
         canvas.drawPath(pathCycle, linePaint)
 
-        val advance = lengthCycle
-        val phase = initialPhase + dotProgress * lengthCycle
+        val advance = lengthTrack
+        val phase = initialPhase - dotProgress * lengthTrack
 
         dotPaint.pathEffect = PathDashPathEffect(pathFlight, advance, phase, PathDashPathEffect.Style.ROTATE)
-        canvas.drawPath(pathCycle, dotPaint)
+        canvas.drawPath(pathTrack, dotPaint)
     }
 
     /**
