@@ -23,9 +23,13 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
             callback?.invalidateDrawable(this)
         }
 
-    private val cornerEffect = CornerPathEffect(8f)
+    var dotProgress = 0f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            callback.invalidateDrawable(this)
+        }
 
-    private val initialPhase = 0f
+    private val cornerEffect = CornerPathEffect(8f)
 
     private val linePaint = Paint(ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -34,21 +38,42 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
         pathEffect = cornerEffect
     }
 
-    private val path = Path().apply {
+    private val dotPaint = Paint(ANTI_ALIAS_FLAG).apply {
+        color = 0xFFFFFFFF.toInt()
+        style = Paint.Style.FILL
+    }
+
+    val pathCycle = Path().apply {
         addCircle(cx, cy, radius, Path.Direction.CW)
     }
 
-    private val length by lazy(LazyThreadSafetyMode.NONE) {
-        pathMeasure.setPath(path, false)
+    val pathDot = Path().apply {
+        addCircle(0f, 0f, 8f, Path.Direction.CW)
+    }
+
+    private val lengthCycle by lazy(LazyThreadSafetyMode.NONE) {
+        pathMeasure.setPath(pathCycle, false)
         pathMeasure.length
     }
 
+    private val initialPhase = lengthCycle * 0.05f
+
+    private val pathArrow = makeConvexArrow(32f, 12f)
+
     override fun draw(canvas: Canvas) {
-        if (progress < 1f) {
-            val progressEffect = dashEffectCircleDrawing()
-            linePaint.pathEffect = ComposePathEffect(progressEffect, cornerEffect)
-        }
-        canvas.drawPath(path, linePaint)
+//        if (progress < 1f) {
+//            val progressEffect = dashEffectCircleDrawing()
+//            linePaint.pathEffect = ComposePathEffect(progressEffect, cornerEffect)
+//        }
+        canvas.drawPath(pathCycle, linePaint)
+
+        val advance = lengthCycle
+        val phase = initialPhase + dotProgress * lengthCycle
+
+        dotPaint.pathEffect = PathDashPathEffect(pathDot, advance, phase, PathDashPathEffect.Style.TRANSLATE)
+        canvas.drawPath(pathCycle, dotPaint)
+
+//        canvas.drawPath(makeConvexArrow(32f, 12f), linePaint)
     }
 
     /**
@@ -59,7 +84,7 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
      * повторится по всей длине path. В указанном примере получится статическая картинка. Однако
      * если реагировать на progress, то можно анимировать процесс отрисовки.
      */
-    private fun dashEffectDashedDrawing(dash : Float = 16f) : DashPathEffect =
+    private fun dashEffectDashedDrawing(dash: Float = 16f): DashPathEffect =
         DashPathEffect(
             floatArrayOf(dash, (1f - progress) * dash, dash, (1f - progress) * dash),
             initialPhase
@@ -73,9 +98,9 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
      * длина тире во второй паре аргументов floatArrayOf. А значит мы будем
      * увидим как последовательно отрисовываться линия окружности.
      */
-    private fun dashEffectCircleDrawing() : DashPathEffect =
+    private fun dashEffectCircleDrawing(): DashPathEffect =
         DashPathEffect(
-            floatArrayOf(0f, (1f - progress) * length, progress * length, 0f),
+            floatArrayOf(0f, (1f - progress) * lengthCycle, progress * lengthCycle, 0f),
             initialPhase
         )
 
@@ -85,10 +110,12 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
     override fun setAlpha(alpha: Int) {
         linePaint.alpha = alpha
     }
+
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
     override fun setColorFilter(colorFilter: ColorFilter?) {
         linePaint.colorFilter = colorFilter
     }
+
     override fun getIntrinsicWidth() = width
     override fun getIntrinsicHeight() = height
 
@@ -106,5 +133,14 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
 
             override fun get(cd: CustomDrawable): Float = cd.progress
         }
+
+        object DOT_PROGRESS : Property<CustomDrawable, Float>(Float::class.java, "dotProgress") {
+            override fun set(cd: CustomDrawable, value: Float) {
+                cd.dotProgress = value
+            }
+
+            override fun get(cd: CustomDrawable): Float = cd.dotProgress
+        }
+
     }
 }

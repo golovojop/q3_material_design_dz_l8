@@ -38,48 +38,31 @@ class ThemeActivity : AppCompatActivity() {
         }
 
         custom_drawable.setImageDrawable(CustomDrawable(96f))
-
         initListView()
     }
 
     override fun onResume() {
         super.onResume()
         animateCustomDrawable()
-//        animateFlightByCycle()
     }
-
-    private fun animateFlightByCycle() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val path = Path()
-
-            path.addCircle(450f, 150f, 125f, Path.Direction.CW)
-            ObjectAnimator.ofFloat(iv_flight, View.X, View.Y, path).apply {
-                duration = 12000
-                repeatCount = INFINITE
-                repeatMode = RESTART
-                start()
-            }
-
-        } else {
-            animateFlightHorizontal()
-        }
-
-    }
-
 
     private fun animateCustomDrawable() {
         val customDrawable : CustomDrawable = custom_drawable.drawable as CustomDrawable
+//
+//        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.PROGRESS, 0f, 1f).apply {
+//            duration = 8000L
+//            interpolator = LinearInterpolator()
+//            repeatCount = INFINITE
+//            repeatMode = RESTART
+//        }.start()
 
-        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.PROGRESS, 0f, 1f).apply {
+        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.DOT_PROGRESS, 0f, 1f).apply {
             duration = 8000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART
         }.start()
-
     }
-
 
     private fun animateFlightHorizontal() {
         iv_flight.startAnimation(
