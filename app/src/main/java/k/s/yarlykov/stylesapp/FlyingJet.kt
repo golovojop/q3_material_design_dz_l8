@@ -35,14 +35,14 @@ class FlyingJet(val width : Int, val height : Int, val marker : Bitmap, val radi
         style = Paint.Style.FILL
     }
 
-//    val pathCycle = Path().apply {
-//        addCircle(cx, cy, radius, Path.Direction.CW)
-//    }
-
     val pathCycle = Path().apply {
-        moveTo(0f, (height/2).toFloat())
-        lineTo(width.toFloat(), (height/2).toFloat())
+        addCircle(cx, cy, radius, Path.Direction.CW)
     }
+
+//    val pathCycle = Path().apply {
+//        moveTo(0f, (height/2).toFloat())
+//        lineTo(width.toFloat(), (height/2).toFloat())
+//    }
 
     val pathDot = Path().apply {
         addCircle(0f, 0f, 8f, Path.Direction.CW)
@@ -75,7 +75,8 @@ class FlyingJet(val width : Int, val height : Int, val marker : Bitmap, val radi
 
         val bitmap : Bitmap = marker
         val rect: RectF = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
-        canvas.drawBitmap(bitmap, null, rect, linePaint )
+        rect.offset(0f, - bitmap.height.toFloat() / 2)
+        canvas.drawBitmap(bitmap, null, rect, linePaint)
 
 //        val advance = lengthPath
 //        val phase = dotProgress * lengthPath
