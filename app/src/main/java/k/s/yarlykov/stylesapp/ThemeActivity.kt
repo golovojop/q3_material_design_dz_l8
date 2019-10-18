@@ -24,6 +24,7 @@ import android.view.animation.TranslateAnimation
 import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_theme.*
 import kotlinx.android.synthetic.main.content_styled.*
 
@@ -38,7 +39,8 @@ class ThemeActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        custom_drawable.setImageDrawable(CustomDrawable(96f))
+        val jet = ContextCompat.getDrawable(this, R.drawable.ic_send)
+        custom_drawable.setImageDrawable(FlyingJet(600, 400, jet!!, 96f))
         initListView()
     }
 
@@ -48,21 +50,22 @@ class ThemeActivity : AppCompatActivity() {
     }
 
     private fun animateCustomDrawable() {
-        val customDrawable : CustomDrawable = custom_drawable.drawable as CustomDrawable
-//
-//        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.PROGRESS, 0f, 1f).apply {
-//            duration = 8000L
-//            interpolator = LinearInterpolator()
-//            repeatCount = INFINITE
-//            repeatMode = RESTART
-//        }.start()
 
-        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.DOT_PROGRESS, 0f, 1f).apply {
+        val flyingJet = custom_drawable.drawable as FlyingJet
+        ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.DOT_PROGRESS, 0f, 1f).apply {
             duration = 8000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART
         }.start()
+
+//        val customDrawable : CustomDrawable = custom_drawable.drawable as CustomDrawable
+//        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.DOT_PROGRESS, 0f, 1f).apply {
+//            duration = 8000L
+//            interpolator = LinearInterpolator()
+//            repeatCount = INFINITE
+//            repeatMode = RESTART
+//        }.start()
     }
 
     private fun animateFlightHorizontal() {

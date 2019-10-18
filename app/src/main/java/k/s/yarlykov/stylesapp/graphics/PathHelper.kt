@@ -1,4 +1,4 @@
-package k.s.yarlykov.stylesapp
+package k.s.yarlykov.stylesapp.graphics
 
 import android.graphics.Path
 

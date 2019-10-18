@@ -6,7 +6,7 @@
  * https://android.googlesource.com/platform/frameworks/base/+/17e64ffd852f8fe23b8e2e2ff1b62ee742af17a6/core/java/android/util/PathParser.java
  */
 
-package k.s.yarlykov.stylesapp;
+package k.s.yarlykov.stylesapp.graphics;
 
 import android.graphics.Path;
 import android.util.Log;

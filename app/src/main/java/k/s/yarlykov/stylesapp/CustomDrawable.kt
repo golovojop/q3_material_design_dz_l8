@@ -5,7 +5,10 @@
  * https://gist.github.com/nickbutcher/b41da75b8b1fc115171af86c63796c5b#file-polygonlapsdrawable-kt
  *
  * http://www.curious-creature.com/2013/12/21/android-recipe-4-path-tracing/?source=post_page-----3fbc679a6f77----------------------
- *https://github.com/romainguy/road-trip/blob/master/application/src/main/java/org/curiouscreature/android/roadtrip/IntroView.java
+ * https://github.com/romainguy/road-trip/blob/master/application/src/main/java/org/curiouscreature/android/roadtrip/IntroView.java
+ *
+ * How Android draws
+ * https://developer.android.com/guide/topics/ui/how-android-draws
  */
 
 package k.s.yarlykov.stylesapp
@@ -14,6 +17,10 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.graphics.drawable.Drawable
 import android.util.Property
+import k.s.yarlykov.stylesapp.graphics.getUfoShapePath
+import k.s.yarlykov.stylesapp.graphics.makeConvexArrow
+import k.s.yarlykov.stylesapp.graphics.makeTakeOffPath
+import k.s.yarlykov.stylesapp.graphics.makeTakeOffPathShifted
 
 class CustomDrawable(private val radius: Float = 64f) : Drawable() {
 
@@ -60,7 +67,8 @@ class CustomDrawable(private val radius: Float = 64f) : Drawable() {
     val pathUfo = getUfoShapePath()
 
     val pathTakeOff = makeTakeOffPath(width.toFloat(), height.toFloat())
-    val pathTakeOffShifted: Path = makeTakeOffPathShifted(width.toFloat(), height.toFloat(), 20f)
+    val pathTakeOffShifted: Path =
+        makeTakeOffPathShifted(width.toFloat(), height.toFloat(), 20f)
 
     private val lengthCycle by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
