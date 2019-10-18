@@ -1,5 +1,7 @@
 package k.s.yarlykov.stylesapp.graphics
 
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.graphics.Path
 
 /**
@@ -44,5 +46,13 @@ fun makeTakeOffPathShifted(width: Float, height: Float, delta : Float) : Path {
     p.lineTo(width / 4.0f + delta, height / 4.0f + height / 8.0f + delta )              // Point 5
     p.lineTo(width,  height / 4.0f + height / 8.0f + delta)
     return p
+}
+
+fun rotateBitmap(bitmap: Bitmap, angle: Float) : Bitmap {
+
+    return with(Matrix()) {
+        postRotate(angle)
+        Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, this, true)
+    }
 }
 

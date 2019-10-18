@@ -25,6 +25,8 @@ import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import k.s.yarlykov.stylesapp.graphics.rotateBitmap
 import kotlinx.android.synthetic.main.activity_theme.*
 import kotlinx.android.synthetic.main.content_styled.*
 
@@ -39,8 +41,15 @@ class ThemeActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
         }
 
-        val jet = ContextCompat.getDrawable(this, R.drawable.ic_send)
-        custom_drawable.setImageDrawable(FlyingJet(600, 400, jet!!, 96f))
+        ContextCompat.getDrawable(this, R.drawable.ic_flight)?.let {drawable ->
+
+            custom_drawable.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f), 96f))
+        }
+
+//        val jet = ContextCompat.getDrawable(this, R.drawable.ic_flight)
+//        rotateBitmap(jet!!.toBitmap(), 90f)
+
+
         initListView()
     }
 
