@@ -4,20 +4,15 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.Property
 
-class FlyingJet(val width : Int, val height : Int, val marker : Bitmap, val radius: Float = 64f) : Drawable() {
+class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, private val radius: Float = 64f) :
+    Drawable() {
 
-    val cx = (width / 2).toFloat()
-    val cy = (height / 2).toFloat()
+    private val cx = (width / 2).toFloat()
+    private val cy = (height / 2).toFloat()
 
-    val cornerPathEffect = CornerPathEffect(24f)
+    private val cornerPathEffect = CornerPathEffect(24f)
 
-    var progress = 1f
-        set(value) {
-            field = value.coerceIn(0f, 1f)
-            callback?.invalidateDrawable(this)
-        }
-
-    var dotProgress = 0f
+    private var progress = 1f
         set(value) {
             field = value.coerceIn(0f, 1f)
             callback?.invalidateDrawable(this)
@@ -25,79 +20,70 @@ class FlyingJet(val width : Int, val height : Int, val marker : Bitmap, val radi
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
-        color = 0xCC888888.toInt()
+        color = 0xFFFFFFFF.toInt()
         strokeWidth = 6f
         pathEffect = cornerPathEffect
-    }
-
-    private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFFFFFFFF.toInt()
-        style = Paint.Style.FILL
     }
 
     val pathCycle = Path().apply {
         addCircle(cx, cy, radius, Path.Direction.CW)
     }
 
-//    val pathCycle = Path().apply {
-//        moveTo(0f, (height/2).toFloat())
-//        lineTo(width.toFloat(), (height/2).toFloat())
-//    }
-
-    val pathDot = Path().apply {
-        addCircle(0f, 0f, 8f, Path.Direction.CW)
-    }
-
-
     private val lengthPath by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
         pathMeasure.length
     }
 
+    private fun dashEffectCircleDrawing(): DashPathEffect =
+        DashPathEffect(
+            floatArrayOf(0f, lengthPath, progress * lengthPath, 0f),
+            lengthPath
+        )
 
     override fun draw(canvas: Canvas) {
 
         // Отрисовать траекторию
+        if (progress < 1f) {
+            val progressEffect = dashEffectCircleDrawing()
+            linePaint.pathEffect = progressEffect
+        }
         canvas.drawPath(pathCycle, linePaint)
 
         // Отрисовать маркер
-
         // Координаты маркера в текущей позиции на пути
         val pos = floatArrayOf(0f, 0f)
         // Угол катательной в текущей позиции на пути
         val tan = floatArrayOf(0f, 0f)
 
-        pathMeasure.getPosTan(dotProgress * lengthPath, pos, tan)
+        // Настравиваем трансформации канвы. Дело в том, что при каждом "тике" нам нужно
+        // отрисовать один и тот же маркер, но в на другой позиции и под дгуим узлом.
+        // Соответственно мы и говорим канве в какой позиции она должна сейчас рисовать
+        // и под каким углом рисовать.
+        pathMeasure.getPosTan(progress * lengthPath, pos, tan)
         canvas.translate(pos[0], pos[1])
         val angle = Math.atan2(tan[1].toDouble(), tan[0].toDouble())
-
         canvas.rotate(Math.toDegrees(angle).toFloat())
 
-        val bitmap : Bitmap = marker
-        val rect: RectF = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
-        rect.offset(0f, - bitmap.height.toFloat() / 2)
-        canvas.drawBitmap(bitmap, null, rect, linePaint)
+        // Важный момент. Когда рисуем маркер по Path, то он не центрируется по линии этого Path,
+        // а органичивается по ней одной из своих сторон (зависит от текущего положения маркера).
+        //  Чтобы отцентрироваться я сдвигаю прямоугольник маркера вверх на середину его высоты.
+        val rect = RectF(0f, 0f, marker.width.toFloat(), marker.height.toFloat())
+        rect.offset(0f, -marker.height.toFloat() / 2)
 
-//        val advance = lengthPath
-//        val phase = dotProgress * lengthPath
-//
-//        dotPaint.pathEffect =
-//            ComposePathEffect(
-//                PathDashPathEffect(pathDot, advance, phase, PathDashPathEffect.Style.TRANSLATE),
-//                cornerPathEffect
-//            )
-//        canvas.drawPath(pathCarrier, dotPaint)
+        canvas.drawBitmap(marker, null, rect, linePaint)
     }
 
     /**
      * Переопределенные функции класса Drawable
      */
-    override fun getIntrinsicHeight(): Int  = height
+    override fun getIntrinsicHeight(): Int = height
+
     override fun getIntrinsicWidth(): Int = width
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
     override fun setColorFilter(colorFilter: ColorFilter?) {
         linePaint.colorFilter = colorFilter
     }
+
     override fun setAlpha(alpha: Int) {
         linePaint.alpha = alpha
     }
@@ -111,14 +97,6 @@ class FlyingJet(val width : Int, val height : Int, val marker : Bitmap, val radi
             }
 
             override fun get(fj: FlyingJet): Float = fj.progress
-        }
-
-        object DOT_PROGRESS : Property<FlyingJet, Float>(Float::class.java, "dotProgress") {
-            override fun set(fj: FlyingJet, value: Float) {
-                fj.dotProgress = value
-            }
-
-            override fun get(fj: FlyingJet): Float = fj.dotProgress
         }
     }
 }
