@@ -57,7 +57,7 @@ class ThemeActivity : AppCompatActivity() {
 
         val flyingJet = custom_drawable.drawable as FlyingJet
         ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
-            duration = 8000L
+            duration = 12000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART

@@ -26,33 +26,87 @@ fun getUfoShapePath(): Path {
     return PathParser.createPathFromPathData(icSend)
 }
 
-fun makeTakeOffPath(width: Float, height: Float) : Path {
+fun makeTakeOffPath(width: Float, height: Float): Path {
     val p = Path()
     p.moveTo(0.0f, height / 4.0f)              // Point 1
     p.lineTo(width - width / 4.0f, height / 4.0f)               // Point 2
-    p.lineTo(width - width / 4.0f , height - height / 4.0f)             // Point 3
+    p.lineTo(width - width / 4.0f, height - height / 4.0f)             // Point 3
     p.lineTo(width / 4.0f, height - height / 4.0f)             // Point 4
-    p.lineTo(width / 4.0f, height / 4.0f + height / 8.0f )              // Point 5
-    p.lineTo(width,  height / 4.0f + height / 8.0f )
+    p.lineTo(width / 4.0f, height / 4.0f + height / 8.0f)              // Point 5
+    p.lineTo(width, height / 4.0f + height / 8.0f)
     return p
 }
 
-fun makeTakeOffPathShifted(width: Float, height: Float, delta : Float) : Path {
+fun makeTakeOffPathShifted(width: Float, height: Float, delta: Float): Path {
     val p = Path()
     p.moveTo(0.0f, height / 4.0f + delta)              // Point 1
     p.lineTo(width - width / 4.0f - delta, height / 4.0f + delta)               // Point 2
     p.lineTo(width - width / 4.0f - delta, height - height / 4.0f - delta)             // Point 3
     p.lineTo(width / 4.0f + delta, height - height / 4.0f - delta)             // Point 4
-    p.lineTo(width / 4.0f + delta, height / 4.0f + height / 8.0f + delta )              // Point 5
-    p.lineTo(width,  height / 4.0f + height / 8.0f + delta)
+    p.lineTo(width / 4.0f + delta, height / 4.0f + height / 8.0f + delta)              // Point 5
+    p.lineTo(width, height / 4.0f + height / 8.0f + delta)
     return p
 }
 
-fun rotateBitmap(bitmap: Bitmap, angle: Float) : Bitmap {
+fun rotateBitmap(bitmap: Bitmap, angle: Float): Bitmap {
 
     return with(Matrix()) {
         postRotate(angle)
         Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, this, true)
     }
+}
+
+/**
+ * https://stackoverflow.com/questions/22763632/construct-spline-with-android-graphics-path
+ * https://ovpwp.wordpress.com/2008/12/17/how-to-draw-a-smooth-curve-through-a-set-of-2d-points-with-bezier-methods/
+ */
+fun pathBezier(): Path {
+
+//    val knotsArr = listOf(
+//        BezierSplineUtil.Point(0f, 100f),
+//        BezierSplineUtil.Point(155f, 255f),
+//        BezierSplineUtil.Point(400f, 300f),
+//        BezierSplineUtil.Point(15f, 5f)
+//    )
+
+    val knotsArr = listOf(
+        BezierSplineUtil.Point(-100f, 200f),
+        BezierSplineUtil.Point(300f, 300f),
+
+        BezierSplineUtil.Point(450f, 170f),
+        BezierSplineUtil.Point(300f, 80f),
+
+        BezierSplineUtil.Point(180f, 200f),
+        BezierSplineUtil.Point(300f, 370f),
+
+        BezierSplineUtil.Point(450f, 350f),
+        BezierSplineUtil.Point(580f, 220f),
+
+        BezierSplineUtil.Point(500f, 50f),
+        BezierSplineUtil.Point(300f, 60f),
+
+        BezierSplineUtil.Point(150f, 90f),
+        BezierSplineUtil.Point(-110f, 200f)
+    )
+
+    val controlPoints = BezierSplineUtil.getCurveControlPoints(knotsArr.toTypedArray())
+
+    val firstCP = controlPoints[0]
+    val secondCP = controlPoints[1]
+
+    val p = Path()
+    p.moveTo(knotsArr[0].x, knotsArr[0].y)
+
+    for (i in 0 until firstCP.size) {
+        p.cubicTo(
+            firstCP[i].x, firstCP[i].y,
+            secondCP[i].x, secondCP[i].y,
+            knotsArr[i + 1].x, knotsArr[i + 1].y
+        )
+    }
+
+    return p
+
+
 }
 

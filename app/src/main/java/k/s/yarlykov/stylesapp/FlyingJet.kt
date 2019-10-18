@@ -3,6 +3,7 @@ package k.s.yarlykov.stylesapp
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.Property
+import k.s.yarlykov.stylesapp.graphics.pathBezier
 
 class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, private val radius: Float = 64f) :
     Drawable() {
@@ -21,13 +22,15 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, pri
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         color = 0xFFFFFFFF.toInt()
-        strokeWidth = 6f
+        strokeWidth = 3f
         pathEffect = cornerPathEffect
     }
 
-    val pathCycle = Path().apply {
-        addCircle(cx, cy, radius, Path.Direction.CW)
-    }
+//    val pathCycle = Path().apply {
+//        addCircle(cx, cy, radius, Path.Direction.CW)
+//    }
+
+    val pathCycle = pathBezier()
 
     private val lengthPath by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCycle, false)
