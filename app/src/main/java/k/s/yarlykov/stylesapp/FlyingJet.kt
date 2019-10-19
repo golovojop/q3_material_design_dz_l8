@@ -2,14 +2,11 @@ package k.s.yarlykov.stylesapp
 
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.util.Property
 import k.s.yarlykov.stylesapp.graphics.pathBezier
 
-class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, private val radius: Float = 64f) :
-    Drawable() {
-
-    private val cx = (width / 2).toFloat()
-    private val cy = (height / 2).toFloat()
+class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : Drawable() {
 
     private val cornerPathEffect = CornerPathEffect(24f)
 
@@ -26,24 +23,20 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, pri
         pathEffect = cornerPathEffect
     }
 
-//    val pathCarrier = Path().apply {
-//        addCircle(cx, cy, radius, Path.Direction.CW)
-//    }
+    private val erasePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = 0xFF5D1049.toInt()
+        strokeWidth = 3f
+        pathEffect = cornerPathEffect
+    }
 
-    // "Опорный Path по которому будет двигаться все остальное"
-    val pathCarrier = pathBezier()
+    // "Опорный" Path по которому будет двигаться все остальное
+    private val pathCarrier = pathBezier()
 
     private val lengthCarrierPath by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCarrier, false)
         pathMeasure.length
     }
-
-//    private fun dashEffectCircleDrawing(): DashPathEffect =
-//        DashPathEffect(
-//            floatArrayOf(0f, lengthPath, progress * lengthPath, 0f),
-//            lengthPath
-//        )
-
 
     private fun dashEffectDrawing(): DashPathEffect =
         DashPathEffect(
@@ -51,16 +44,27 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, pri
             lengthCarrierPath
         )
 
+    private val tailLengthRatio = 0.3f
+    private val tailInitialLength = lengthCarrierPath * tailLengthRatio
+    private val tailReductionDistance = lengthCarrierPath - tailInitialLength
+
     override fun draw(canvas: Canvas) {
 
-        val partialPath = Path()
-        pathMeasure.getSegment(0f, progress * lengthCarrierPath, partialPath, true)
+        // Отрисовать "реверсивный след" самолета пунктирной линией.
+        // После прохождения дистанции равной tailLengthRatio, хвост начинает уменьшатся
+        // пропорционально (!!!) оставшейся части пути. В конце пути хвост исчезает )
+        val stopD = progress * lengthCarrierPath
+        val startD = if (progress < tailLengthRatio) 0f else {
 
-        // Отрисовать траекторию
-        if (progress < 1f) {
-            val progressEffect = dashEffectDrawing()
-            linePaint.pathEffect = progressEffect
+            val tailReductionRatio = lengthCarrierPath * (1f - progress) / tailReductionDistance
+            stopD - tailInitialLength * tailReductionRatio
         }
+
+        val partialPath = Path()
+        pathMeasure.getSegment(startD, stopD, partialPath, true)
+
+        val progressEffect = dashEffectDrawing()
+        linePaint.pathEffect = progressEffect
         canvas.drawPath(partialPath, linePaint)
 
         // Отрисовать маркер

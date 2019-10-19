@@ -42,7 +42,7 @@ class ThemeActivity : AppCompatActivity() {
         }
 
         ContextCompat.getDrawable(this, R.drawable.ic_flight)?.let {drawable ->
-            custom_drawable.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f), 128f))
+            custom_drawable.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f)))
         }
 
         initListView()
