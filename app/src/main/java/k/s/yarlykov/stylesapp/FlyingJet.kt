@@ -26,31 +26,42 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, pri
         pathEffect = cornerPathEffect
     }
 
-//    val pathCycle = Path().apply {
+//    val pathCarrier = Path().apply {
 //        addCircle(cx, cy, radius, Path.Direction.CW)
 //    }
 
-    val pathCycle = pathBezier()
+    // "Опорный Path по которому будет двигаться все остальное"
+    val pathCarrier = pathBezier()
 
-    private val lengthPath by lazy(LazyThreadSafetyMode.NONE) {
-        pathMeasure.setPath(pathCycle, false)
+    private val lengthCarrierPath by lazy(LazyThreadSafetyMode.NONE) {
+        pathMeasure.setPath(pathCarrier, false)
         pathMeasure.length
     }
 
-    private fun dashEffectCircleDrawing(): DashPathEffect =
+//    private fun dashEffectCircleDrawing(): DashPathEffect =
+//        DashPathEffect(
+//            floatArrayOf(0f, lengthPath, progress * lengthPath, 0f),
+//            lengthPath
+//        )
+
+
+    private fun dashEffectDrawing(): DashPathEffect =
         DashPathEffect(
-            floatArrayOf(0f, lengthPath, progress * lengthPath, 0f),
-            lengthPath
+            floatArrayOf(8f, 8f, 8f, 8f),
+            lengthCarrierPath
         )
 
     override fun draw(canvas: Canvas) {
 
+        val partialPath = Path()
+        pathMeasure.getSegment(0f, progress * lengthCarrierPath, partialPath, true)
+
         // Отрисовать траекторию
         if (progress < 1f) {
-            val progressEffect = dashEffectCircleDrawing()
+            val progressEffect = dashEffectDrawing()
             linePaint.pathEffect = progressEffect
         }
-        canvas.drawPath(pathCycle, linePaint)
+        canvas.drawPath(partialPath, linePaint)
 
         // Отрисовать маркер
         // Координаты маркера в текущей позиции на пути
@@ -62,7 +73,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap, pri
         // отрисовать один и тот же маркер, но в на другой позиции и под дгуим узлом.
         // Соответственно мы и говорим канве в какой позиции она должна сейчас рисовать
         // и под каким углом рисовать.
-        pathMeasure.getPosTan(progress * lengthPath, pos, tan)
+        pathMeasure.getPosTan(progress * lengthCarrierPath, pos, tan)
         canvas.translate(pos[0], pos[1])
         val angle = Math.atan2(tan[1].toDouble(), tan[0].toDouble())
         canvas.rotate(Math.toDegrees(angle).toFloat())
