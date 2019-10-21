@@ -13,6 +13,8 @@ import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
 import android.graphics.Color
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +43,12 @@ class ThemeActivity : AppCompatActivity() {
         ContextCompat.getDrawable(this, R.drawable.ic_flight)?.let {drawable ->
             ivFlyingJet.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f)))
         }
-        ivContour.setImageDrawable(CityContour(128, 96))
+
+        ivContour.setImageDrawable(CityContour(
+            getString(R.string.city_contour_path),
+            getString(R.string.city_contour_width).toFloat(),
+            getScreenDims()))
+
         initListView()
     }
 
@@ -116,4 +123,11 @@ class ThemeActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun getScreenDims() : Pair<Int, Int> =
+        DisplayMetrics().let {
+            windowManager.defaultDisplay.getMetrics(it)
+            Pair(it.widthPixels, it.heightPixels)
+        }
+
 }

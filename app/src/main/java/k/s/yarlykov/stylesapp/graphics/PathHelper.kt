@@ -62,13 +62,6 @@ fun rotateBitmap(bitmap: Bitmap, angle: Float): Bitmap {
  */
 fun pathBezier(): Path {
 
-//    val knotsArr = listOf(
-//        BezierSplineUtil.Point(0f, 100f),
-//        BezierSplineUtil.Point(155f, 255f),
-//        BezierSplineUtil.Point(400f, 300f),
-//        BezierSplineUtil.Point(15f, 5f)
-//    )
-
     val knotsArr = listOf(
         BezierSplineUtil.Point(-100f, 200f),
         BezierSplineUtil.Point(300f, 300f),
@@ -104,9 +97,30 @@ fun pathBezier(): Path {
             knotsArr[i + 1].x, knotsArr[i + 1].y
         )
     }
+    return p
+}
+
+/**
+ * https://www.vecteezy.com/vector-art/625548-city-skyline-in-minimalist-style
+ */
+fun cityOutlinedPath( contourData: String,  contourWidth: Float,  screen: Pair<Int, Int>) : Path {
+
+//    val pathData = "0.150,30.150,30.86,55.86,55.150,65.150,65.50,70.50,70.35,87.15,105.35,105.50,110.50,110.150,120.150,120.90,125.90,125.80,145.85,145.93,150.94,150.150,158.150,158.115,166.115,166.96,175.96,175.75,186.74,187.60,192.60,192.39,192.60,198.60,198.75,209.75,210.96,218.96,219.114,226.114,226.150,235.150,235.15,270.33,270.150,280.150,280.90,287.90,287.77,297.77,297.58,297.77,306.77,306.90,313.90,313.150,325.150,325.56,336.56,336.33,342.33,342.13,363.13,364.33,370.33,370.55,380.55,380.150,390.150,390.50,425.50,425.150,434.150,433.90,440.90,440.80,457.80,457.90,464.90,464.100,476.100,476.113,484.113,484.150,510.150"
+
+    // Растягиваем контур по всей ширине экрана. Для это умножаем все Х-координаты на ratio
+    val scaleX = screen.first.toFloat() / contourWidth
+
+    val pairs = contourData.split(",").toList()
+    val p = Path()
+    p.moveTo(0f, 150f)
+
+    pairs.map {rawPair ->
+        val arr = rawPair.split(".").toTypedArray()
+        Pair(arr[0].toFloat(), arr[1].toFloat())
+    }.forEach{ (x, y) ->
+        p.lineTo(x * scaleX, y)
+    }
 
     return p
-
-
 }
 
