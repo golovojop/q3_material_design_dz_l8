@@ -31,7 +31,7 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
 
     private fun dashEffectDrawing(): DashPathEffect =
         DashPathEffect(
-            floatArrayOf(0f, (1f - contourProgress) * lengthContourPath, contourProgress * lengthContourPath, 0f),
+            floatArrayOf(contourProgress * lengthContourPath, (1f - contourProgress) * lengthContourPath),
             initialPhase
         )
 

@@ -8,6 +8,8 @@
 
 package k.s.yarlykov.stylesapp
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
@@ -23,6 +25,8 @@ import android.view.animation.TranslateAnimation
 import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.addListener
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import k.s.yarlykov.stylesapp.graphics.rotateBitmap
@@ -54,28 +58,38 @@ class ThemeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        animateCustomDrawable()
-        animateContour()
+
+        /**
+         * Для обработки Animator.doOnEnd и пр
+         * https://developer.android.com/kotlin/ktx#core-packages
+         */
+        val contourAnimator = animateContour()
+
+        contourAnimator.doOnEnd {
+            Log.e("APP_TAG", "animation finished in thread ${Thread.currentThread().name}")
+            animateCustomDrawable().start()
+        }
+        contourAnimator.start()
     }
 
-    private fun animateContour() {
+    private fun animateContour() : ObjectAnimator {
         val contour = ivContour.drawable as CityContour
-        ObjectAnimator.ofFloat(contour, CityContour.Companion.CONTOUR_PROGRESS, 0f, 1f).apply {
+        return ObjectAnimator.ofFloat(contour, CityContour.Companion.CONTOUR_PROGRESS, 0f, 1f).apply {
             duration = 4000L
             interpolator = LinearInterpolator()
             repeatCount = 0
             repeatMode = RESTART
-        }.start()
+        }
     }
 
-    private fun animateCustomDrawable() {
+    private fun animateCustomDrawable() : ObjectAnimator {
         val flyingJet = ivFlyingJet.drawable as FlyingJet
-        ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
+        return ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
             duration = 12000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART
-        }.start()
+        }
     }
 
     private fun animateFlightHorizontal() {
