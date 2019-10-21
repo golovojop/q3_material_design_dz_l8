@@ -23,13 +23,6 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
         pathEffect = cornerPathEffect
     }
 
-    private val erasePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        color = 0xFF5D1049.toInt()
-        strokeWidth = 3f
-        pathEffect = cornerPathEffect
-    }
-
     // "Опорный" Path по которому будет двигаться все остальное
     private val pathCarrier = pathBezier()
 
@@ -95,7 +88,6 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
      * Переопределенные функции класса Drawable
      */
     override fun getIntrinsicHeight(): Int = height
-
     override fun getIntrinsicWidth(): Int = width
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
     override fun setColorFilter(colorFilter: ColorFilter?) {

@@ -5,7 +5,7 @@ import android.graphics.Matrix
 import android.graphics.Path
 
 /**
- * Функция строит Path для фигурки стрелки, направленной вправо.
+ * Функция строит Path для наконечника стрелки, направленной вправо.
  */
 fun makeConvexArrow(length: Float, height: Float): Path {
     val p = Path()

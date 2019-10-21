@@ -12,10 +12,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
 import android.graphics.Color
-import android.graphics.Path
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -42,38 +39,40 @@ class ThemeActivity : AppCompatActivity() {
         }
 
         ContextCompat.getDrawable(this, R.drawable.ic_flight)?.let {drawable ->
-            custom_drawable.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f)))
+            ivFlyingJet.setImageDrawable(FlyingJet(600, 400, rotateBitmap(drawable.toBitmap(), 90f)))
         }
-
+        ivContour.setImageDrawable(CityContour(128, 96))
         initListView()
     }
 
     override fun onResume() {
         super.onResume()
         animateCustomDrawable()
+        animateContour()
+    }
+
+    private fun animateContour() {
+        val contour = ivContour.drawable as CityContour
+        ObjectAnimator.ofFloat(contour, CityContour.Companion.CONTOUR_PROGRESS, 0f, 1f).apply {
+            duration = 4000L
+            interpolator = LinearInterpolator()
+            repeatCount = 0
+            repeatMode = RESTART
+        }.start()
     }
 
     private fun animateCustomDrawable() {
-
-        val flyingJet = custom_drawable.drawable as FlyingJet
+        val flyingJet = ivFlyingJet.drawable as FlyingJet
         ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
             duration = 12000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART
         }.start()
-
-//        val customDrawable : CustomDrawable = custom_drawable.drawable as CustomDrawable
-//        ObjectAnimator.ofFloat(customDrawable, CustomDrawable.Companion.DOT_PROGRESS, 0f, 1f).apply {
-//            duration = 8000L
-//            interpolator = LinearInterpolator()
-//            repeatCount = INFINITE
-//            repeatMode = RESTART
-//        }.start()
     }
 
     private fun animateFlightHorizontal() {
-        iv_flight.startAnimation(
+        ivContour.startAnimation(
             TranslateAnimation(
                 0f, 300f,
                 0f, 0f
