@@ -2,9 +2,8 @@ package k.s.yarlykov.stylesapp
 
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.util.Property
-import k.s.yarlykov.stylesapp.graphics.pathBezier
+import k.s.yarlykov.stylesapp.graphics.pathCubic
 
 class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : Drawable() {
 
@@ -24,7 +23,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
     }
 
     // "Опорный" Path по которому будет двигаться все остальное
-    private val pathCarrier = pathBezier()
+    private val pathCarrier = pathCubic()
 
     private val lengthCarrierPath by lazy(LazyThreadSafetyMode.NONE) {
         pathMeasure.setPath(pathCarrier, false)
@@ -37,7 +36,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
             lengthCarrierPath
         )
 
-    private val tailLengthRatio = 0.3f
+    private val tailLengthRatio = 0.5f
     private val tailInitialLength = lengthCarrierPath * tailLengthRatio
     private val tailReductionDistance = lengthCarrierPath - tailInitialLength
 

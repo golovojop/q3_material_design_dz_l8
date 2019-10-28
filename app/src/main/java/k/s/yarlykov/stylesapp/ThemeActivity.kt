@@ -8,8 +8,6 @@
 
 package k.s.yarlykov.stylesapp
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.RESTART
@@ -25,7 +23,6 @@ import android.view.animation.TranslateAnimation
 import android.widget.SimpleAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.animation.addListener
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -56,22 +53,6 @@ class ThemeActivity : AppCompatActivity() {
         initListView()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        /**
-         * Для обработки Animator.doOnEnd и пр
-         * https://developer.android.com/kotlin/ktx#core-packages
-         */
-        val contourAnimator = animateContour()
-
-        contourAnimator.doOnEnd {
-            Log.e("APP_TAG", "animation finished in thread ${Thread.currentThread().name}")
-            animateCustomDrawable().start()
-        }
-        contourAnimator.start()
-    }
-
     private fun animateContour() : ObjectAnimator {
         val contour = ivContour.drawable as CityContour
         return ObjectAnimator.ofFloat(contour, CityContour.Companion.CONTOUR_PROGRESS, 0f, 1f).apply {
@@ -82,15 +63,32 @@ class ThemeActivity : AppCompatActivity() {
         }
     }
 
-    private fun animateCustomDrawable() : ObjectAnimator {
+    private fun animateFlyingJet() : ObjectAnimator {
         val flyingJet = ivFlyingJet.drawable as FlyingJet
         return ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
-            duration = 12000L
+            duration = 4000L
             interpolator = LinearInterpolator()
             repeatCount = INFINITE
             repeatMode = RESTART
         }
     }
+
+    private fun showAnimation() {
+
+        /**
+         * Для обработки Animator.doOnEnd и пр
+         * https://developer.android.com/kotlin/ktx#core-packages
+         */
+        val contourAnimator = animateContour()
+
+        contourAnimator.doOnEnd {
+            Log.e("APP_TAG", "animation finished in thread ${Thread.currentThread().name}")
+            animateFlyingJet().start()
+        }
+        contourAnimator.start()
+
+    }
+
 
     private fun animateFlightHorizontal() {
         ivContour.startAnimation(
@@ -135,6 +133,10 @@ class ThemeActivity : AppCompatActivity() {
                 view.findViewById<TextView>(R.id.tv_item_lv).setTextColor(if (position > 1) Color.GRAY else Color.WHITE)
                 return view
             }
+        }
+
+        button_fly.setOnClickListener {
+            showAnimation()
         }
     }
 

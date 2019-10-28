@@ -3,6 +3,7 @@ package k.s.yarlykov.stylesapp.graphics
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.Path
+import android.graphics.PointF
 
 /**
  * Функция строит Path для наконечника стрелки, направленной вправо.
@@ -55,6 +56,25 @@ fun rotateBitmap(bitmap: Bitmap, angle: Float): Bitmap {
         Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, this, true)
     }
 }
+
+/**
+ * https://startandroid.ru/ru/uroki/vse-uroki-spiskom/316-urok-143-risovanie-path.html
+ */
+fun pathCubic() : Path {
+
+    val pointFrom = PointF(-50f, 50f)
+    val controlPointFirst = PointF(300f, 300f)
+    val controlPointSecond = PointF(500f, -50f)
+    val pointTo = PointF(900f, 200f)
+
+    return Path().apply {
+        moveTo(pointFrom.x, pointFrom.y)
+        cubicTo(controlPointFirst.x, controlPointFirst.y,
+            controlPointSecond.x, controlPointSecond.y,
+            pointTo.x, pointTo.y)
+    }
+}
+
 
 /**
  * https://stackoverflow.com/questions/22763632/construct-spline-with-android-graphics-path
