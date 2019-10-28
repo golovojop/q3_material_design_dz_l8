@@ -68,7 +68,17 @@ class ThemeActivity : AppCompatActivity() {
         return ObjectAnimator.ofFloat(flyingJet, FlyingJet.Companion.PROGRESS, 0f, 1f).apply {
             duration = 4000L
             interpolator = LinearInterpolator()
-            repeatCount = INFINITE
+            repeatCount = 0
+            repeatMode = RESTART
+        }
+    }
+
+    private fun hideContour() : ObjectAnimator {
+        val contour = ivContour.drawable as CityContour
+        return ObjectAnimator.ofFloat(contour, CityContour.Companion.CONTOUR_PROGRESS, 0f, 1f).apply {
+            duration = 4000L
+            interpolator = LinearInterpolator()
+            repeatCount = 0
             repeatMode = RESTART
         }
     }

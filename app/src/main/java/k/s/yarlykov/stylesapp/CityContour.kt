@@ -8,6 +8,10 @@ import android.util.Property
 import androidx.core.content.ContextCompat
 import k.s.yarlykov.stylesapp.graphics.cityOutlinedPath
 
+enum class AnimationMode {
+    FORWARD, BACK
+}
+
 class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int, Int>) : Drawable() {
 
     var contourProgress = 0f
@@ -21,6 +25,9 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
         color = 0x88FFFFFF.toInt()
         strokeWidth = 5f
     }
+
+    lateinit var mode : AnimationMode
+
 
     private val pathContour = cityOutlinedPath(contourData, contourWidth, screen)
 
