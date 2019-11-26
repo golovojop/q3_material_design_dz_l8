@@ -6,10 +6,14 @@ import android.util.Property
 import k.s.yarlykov.stylesapp.graphics.cityOutlinedPath
 
 enum class AnimationMode {
-    FORWARD, BACK
+    APPEAR, DISAPPEAR
 }
 
-class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int, Int>) : Drawable() {
+class CityContour(
+    contourData: String,
+    contourWidth: Float,
+    private val screen: Pair<Int, Int>
+) : Drawable() {
 
     var contourProgress = 0f
         set(value) {
@@ -17,14 +21,15 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
             callback?.invalidateDrawable(this)
         }
 
+    var animationMode: AnimationMode = AnimationMode.APPEAR
+
+    private val dashLength = 150F
+
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         color = 0x88FFFFFF.toInt()
         strokeWidth = 5f
     }
-
-    lateinit var mode : AnimationMode
-
 
     private val pathContour = cityOutlinedPath(contourData, contourWidth, screen)
 
@@ -35,13 +40,29 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
 
     private fun dashEffectDrawing(): DashPathEffect =
         DashPathEffect(
-            floatArrayOf(contourProgress * lengthContourPath, (1f - contourProgress) * lengthContourPath),
+            floatArrayOf(
+                contourProgress * lengthContourPath,
+                (1f - contourProgress) * lengthContourPath
+            ),
+            initialPhase
+        )
+
+    private fun disappearDashEffectDrawing(): DashPathEffect =
+        DashPathEffect(
+            floatArrayOf(
+                (1f - contourProgress) * dashLength,
+                contourProgress * dashLength
+            ),
             initialPhase
         )
 
     override fun draw(canvas: Canvas) {
         if (contourProgress < 1f) {
-            linePaint.pathEffect = dashEffectDrawing()
+            linePaint.pathEffect =
+                if (animationMode == AnimationMode.APPEAR)
+                    dashEffectDrawing()
+                else
+                    disappearDashEffectDrawing()
         }
         canvas.drawPath(pathContour, linePaint)
     }
@@ -52,6 +73,7 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
     override fun setAlpha(alpha: Int) {
         linePaint.alpha = alpha
     }
+
     override fun setColorFilter(colorFilter: ColorFilter?) {
         linePaint.colorFilter = colorFilter
     }
@@ -61,7 +83,8 @@ class CityContour(contourData: String, contourWidth: Float, val screen: Pair<Int
 
         private var initialPhase = 0f
 
-        object CONTOUR_PROGRESS : Property<CityContour, Float>(Float::class.java, "contourProgress") {
+        object CONTOUR_PROGRESS :
+            Property<CityContour, Float>(Float::class.java, "contourProgress") {
             override fun set(cc: CityContour, value: Float) {
                 cc.contourProgress = value
             }
