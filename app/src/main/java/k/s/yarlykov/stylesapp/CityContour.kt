@@ -1,11 +1,8 @@
 package k.s.yarlykov.stylesapp
 
-import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.util.DisplayMetrics
 import android.util.Property
-import androidx.core.content.ContextCompat
 import k.s.yarlykov.stylesapp.graphics.cityOutlinedPath
 
 enum class AnimationMode {

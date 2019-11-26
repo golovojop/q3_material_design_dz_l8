@@ -5,6 +5,11 @@ import android.graphics.drawable.Drawable
 import android.util.Property
 import k.s.yarlykov.stylesapp.graphics.pathCubic
 
+/**
+ * @marker - это иконка самолета.
+ * Анимация будет передвигать маркер в пределах Drawable
+ */
+
 class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : Drawable() {
 
     private val cornerPathEffect = CornerPathEffect(24f)
@@ -23,6 +28,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
     }
 
     // "Опорный" Path по которому будет двигаться все остальное
+    // На экране не отображается
     private val pathCarrier = pathCubic()
 
     private val lengthCarrierPath by lazy(LazyThreadSafetyMode.NONE) {
@@ -44,7 +50,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
 
         // Отрисовать "реверсивный след" самолета пунктирной линией.
         // После прохождения дистанции равной tailLengthRatio, хвост начинает уменьшатся
-        // пропорционально (!!!) оставшейся части пути. В конце пути хвост исчезает )
+        // пропорционально (!!!) оставшейся части пути - то есть в конце пути хвост исчезает )
         val stopD = progress * lengthCarrierPath
         val startD = if (progress < tailLengthRatio) 0f else {
 
@@ -59,14 +65,14 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
         linePaint.pathEffect = progressEffect
         canvas.drawPath(partialPath, linePaint)
 
-        // Отрисовать маркер
+        // Отрисовать маркер (самолет)
         // Координаты маркера в текущей позиции на пути
         val pos = floatArrayOf(0f, 0f)
-        // Угол катательной в текущей позиции на пути
+        // Угол касательной в текущей позиции на пути
         val tan = floatArrayOf(0f, 0f)
 
         // Настравиваем трансформации канвы. Дело в том, что при каждом "тике" нам нужно
-        // отрисовать один и тот же маркер, но в на другой позиции и под дгуим узлом.
+        // отрисовать один и тот же маркер, но в на другой позиции и под другим углом.
         // Соответственно мы и говорим канве в какой позиции она должна сейчас рисовать
         // и под каким углом рисовать.
         pathMeasure.getPosTan(progress * lengthCarrierPath, pos, tan)
@@ -87,6 +93,7 @@ class FlyingJet(val width: Int, val height: Int, private val marker: Bitmap) : D
      * Переопределенные функции класса Drawable
      */
     override fun getIntrinsicHeight(): Int = height
+
     override fun getIntrinsicWidth(): Int = width
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
     override fun setColorFilter(colorFilter: ColorFilter?) {
