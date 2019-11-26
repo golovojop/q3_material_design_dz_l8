@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
               android:background="?attr/colorPrimary"
               android:layout_marginTop="?attr/actionBarSize"
               android:fitsSystemWindows="true"
@@ -45,11 +44,13 @@
             android:id="@+id/lv_options"
             android:layout_margin="12dp"
             android:dividerHeight="6dp"
+            android:divider="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="0dp">
     </ListView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clCanvas"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -58,18 +59,29 @@
                 android:layout_height="5dp"
                 android:src="@drawable/line"
                 android:layerType="software"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/rotated_flight"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+        <ImageView
+                android:id="@+id/ivFlyingJet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+                android:id="@+id/ivContour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

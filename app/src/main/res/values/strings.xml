@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StylesApp</string>
+    <string name="app_name">Flying Jet</string>
     <string name="action_settings">Settings</string>
     <string name="button_1">home</string>
     <string name="button_2">login</string>
@@ -10,4 +10,6 @@
     <string name="button_sleep">sleep</string>
     <string name="button_eat">eat</string>
     <string name="title_activity_theme">ThemeActivity</string>
+    <string name="city_contour_path">"0.150,30.150,30.86,55.86,55.150,65.150,65.50,70.50,70.35,87.15,105.35,105.50,110.50,110.150,120.150,120.90,125.90,125.80,145.85,145.93,150.94,150.150,158.150,158.115,166.115,166.96,175.96,175.75,186.74,187.60,192.60,192.39,192.60,198.60,198.75,209.75,210.96,218.96,219.114,226.114,226.150,235.150,235.15,270.33,270.150,280.150,280.90,287.90,287.77,297.77,297.58,297.77,306.77,306.90,313.90,313.150,325.150,325.56,336.56,336.33,342.33,342.13,363.13,364.33,370.33,370.55,380.55,380.150,390.150,390.50,425.50,425.150,434.150,433.90,440.90,440.80,457.80,457.90,464.90,464.100,476.100,476.113,484.113,484.150,510.150"</string>
+    <string name="city_contour_width">510</string>
 </resources>
